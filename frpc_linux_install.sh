@@ -92,9 +92,10 @@ mkdir -p ${FRP_PATH}
 mv ${FILE_NAME}/${FRP_NAME} ${FRP_PATH}
 
 # configure frpc.ini
+# frp.myauth.top -> 124.220.42.103
 cat >${FRP_PATH}/${FRP_NAME}.ini <<EOF
 [common]
-server_addr = 43.136.116.195
+server_addr = frp.myauth.top
 server_port = 7000
 token = hxSoC6lWW6lTR8O64Xqy0tl6BcSYK5Zx5I3BjaO
 
