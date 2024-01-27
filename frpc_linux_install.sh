@@ -99,7 +99,7 @@ server_addr = frp.myauth.top
 server_port = 7000
 token = hxSoC6lWW6lTR8O64Xqy0tl6BcSYK5Zx5I3BjaO
 
-[ssh_${RANDOM}]
+[ssh_${SUDO_USER}_${RANDOM}]
 type = tcp
 local_ip = 127.0.0.1
 local_port = 22
