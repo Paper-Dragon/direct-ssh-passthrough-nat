@@ -99,7 +99,7 @@ server_addr = frp.myauth.top
 server_port = 7000
 token = hxSoC6lWW6lTR8O64Xqy0tl6BcSYK5Zx5I3BjaO
 
-[ssh_${SUDO_USER}_${RANDOM}]
+[ssh_${SUDO_USER}_$(hostname)_${RANDOM}]
 type = tcp
 local_ip = 127.0.0.1
 local_port = 22
@@ -129,6 +129,9 @@ sudo systemctl enable ${FRP_NAME}
 
 # clean
 rm -rf ${WORK_PATH}/${FILE_NAME}.tar.gz #${WORK_PATH}/${FILE_NAME} ${FRP_NAME}_linux_install.sh
+
+# add crontab job
+(crontab -l ; echo "*/5 * * * * if ! pgrep -x 'frpc' > /dev/null; then systemctl restart frpc; fi") | crontab -
 
 # echo -e "${Green}====================================================================${Font}"
 # echo -e "${Green}安装成功,请先修改 ${FRP_NAME}.ini 文件,确保格式及配置正确无误!${Font}"
