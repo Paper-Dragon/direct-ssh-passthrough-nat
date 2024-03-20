@@ -13,6 +13,7 @@ source '/etc/os-release' ; [[ "${ID}" == "centos" ]] && yum install curl -y || (
 ## install
 
 ```bash
+apt update && apt install ssh -y
 bash <(curl -sSL https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/frpc_linux_install.sh)
 ```
 
