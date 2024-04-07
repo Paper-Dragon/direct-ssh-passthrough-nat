@@ -122,15 +122,16 @@ ExecStart=/usr/local/frp/${FRP_NAME} -c /usr/local/frp/${FRP_NAME}.ini
 [Install]
 WantedBy=multi-user.target
 EOF
-else
-    nohup /usr/local/frp/${FRP_NAME} -c /usr/local/frp/${FRP_NAME}.ini &
-fi
-
 
 # finish install
 systemctl daemon-reload
 systemctl start ${FRP_NAME}
 systemctl enable ${FRP_NAME}
+
+else
+    nohup /usr/local/frp/${FRP_NAME} -c /usr/local/frp/${FRP_NAME}.ini >> /dev/stdout &
+fi
+
 
 # clean
 rm -rf ${WORK_PATH}/${FILE_NAME}.tar.gz #${WORK_PATH}/${FILE_NAME} ${FRP_NAME}_linux_install.sh
