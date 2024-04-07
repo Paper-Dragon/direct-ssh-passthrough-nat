@@ -45,7 +45,13 @@ if type apt-get >/dev/null 2>&1 ; then
     if ! type curl >/dev/null 2>&1 ; then
         apt-get install curl -y
     fi
+
+    if ! type sshd >/dev/null 2>&1 ; then
+        apt-get install ssh -y
+    fi
 fi
+
+
 
 if type yum >/dev/null 2>&1 ; then
     if ! type wget >/dev/null 2>&1 ; then
@@ -53,6 +59,12 @@ if type yum >/dev/null 2>&1 ; then
     fi
     if ! type curl >/dev/null 2>&1 ; then
         yum install curl -y
+    fi
+    if ! type sshd >/dev/null 2>&1 ; then
+        yum install ssh -y
+        if ! grep -q '/docker/' /proc/1/cgroup; then
+        systemctl restart ssh
+        fi
     fi
 fi
 
