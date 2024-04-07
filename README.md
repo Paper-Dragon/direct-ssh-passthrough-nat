@@ -2,14 +2,6 @@
 
 
 
-## pre
-
-> base environment
-
-```bash
-source '/etc/os-release' ; [[ "${ID}" == "centos" ]] && yum install curl -y || (apt-get update && apt-get install curl -y)
-```
-
 ## install
 
 ```bash
