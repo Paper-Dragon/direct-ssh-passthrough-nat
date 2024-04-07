@@ -18,13 +18,13 @@ FRP_VERSION=0.51.3
 FRP_PATH=/usr/local/frp
 
 # 停止frpc
-sudo systemctl stop ${FRP_NAME}
-sudo systemctl disable ${FRP_NAME}
+systemctl stop ${FRP_NAME}
+systemctl disable ${FRP_NAME}
 # 删除frpc
 rm -rf ${FRP_PATH}
 # 删除frpc.service
 rm -rf /lib/systemd/system/${FRP_NAME}.service
-sudo systemctl daemon-reload
+systemctl daemon-reload
 # 删除本文件
 #rm -rf ${FRP_NAME}_linux_uninstall.sh
 

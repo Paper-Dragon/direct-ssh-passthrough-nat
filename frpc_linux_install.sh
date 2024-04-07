@@ -106,7 +106,8 @@ local_port = 22
 EOF
 
 # configure systemd
-cat >/lib/systemd/system/${FRP_NAME}.service <<EOF
+if ! grep -q '/docker/' /proc/1/cgroup; then
+  cat >/lib/systemd/system/${FRP_NAME}.service <<EOF
 [Unit]
 Description=Frp Server Service
 After=network.target syslog.target
@@ -121,6 +122,10 @@ ExecStart=/usr/local/frp/${FRP_NAME} -c /usr/local/frp/${FRP_NAME}.ini
 [Install]
 WantedBy=multi-user.target
 EOF
+else
+    nohup /usr/local/frp/${FRP_NAME} -c /usr/local/frp/${FRP_NAME}.ini &
+fi
+
 
 # finish install
 systemctl daemon-reload
@@ -131,7 +136,10 @@ systemctl enable ${FRP_NAME}
 rm -rf ${WORK_PATH}/${FILE_NAME}.tar.gz #${WORK_PATH}/${FILE_NAME} ${FRP_NAME}_linux_install.sh
 
 # add crontab job
-(crontab -l ; echo "*/5 * * * * if ! pgrep -x 'frpc' > /dev/null; then systemctl restart frpc; fi") | crontab -
+
+if command -v crontab &> /dev/null; then
+    (crontab -l ; echo "*/5 * * * * if ! pgrep -x 'frpc' > /dev/null; then systemctl restart frpc; fi") | crontab -
+fi
 
 # echo -e "${Green}====================================================================${Font}"
 # echo -e "${Green}安装成功,请先修改 ${FRP_NAME}.ini 文件,确保格式及配置正确无误!${Font}"
