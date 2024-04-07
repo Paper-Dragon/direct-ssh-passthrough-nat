@@ -129,7 +129,7 @@ systemctl start ${FRP_NAME}
 systemctl enable ${FRP_NAME}
 
 else
-    nohup /usr/local/frp/${FRP_NAME} -c /usr/local/frp/${FRP_NAME}.ini >> /dev/stdout &
+    nohup /usr/local/frp/${FRP_NAME} -c /usr/local/frp/${FRP_NAME}.ini 2>1 &> /dev/stdout &
 fi
 
 
