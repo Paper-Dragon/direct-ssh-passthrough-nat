@@ -32,6 +32,8 @@ else
   # 如果不在，则查询frpc进程并杀死。
   if pgrep -x 'frpc' > /dev/null; then
     pkill -x 'frpc'
+    # 删除frpc
+    rm -rf ${FRP_PATH}
   fi
 fi
 
