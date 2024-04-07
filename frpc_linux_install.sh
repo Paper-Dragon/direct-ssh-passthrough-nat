@@ -14,9 +14,9 @@ Font="\033[0m"
 # variable
 WORK_PATH=$(dirname $(readlink -f $0))
 FRP_NAME=frpc
-FRP_VERSION=0.51.3
+FRP_VERSION=0.56.0
 FRP_PATH=/usr/local/frp
-PROXY_URL="https://mirror.ghproxy.com/"
+PROXY_URL="https://github.geekery.cn/"
 
 # check frpc
 if [ -f "/usr/local/frp/${FRP_NAME}" ] || [ -f "/usr/local/frp/${FRP_NAME}.ini" ] || [ -f "/lib/systemd/system/${FRP_NAME}.service" ];then
@@ -58,7 +58,7 @@ fi
 
 # check network
 GOOGLE_HTTP_CODE=$(curl -o /dev/null --connect-timeout 5 --max-time 8 -s --head -w "%{http_code}" "https://www.google.com")
-PROXY_HTTP_CODE=$(curl -o /dev/null --connect-timeout 5 --max-time 8 -s --head -w "%{http_code}" "${PROXY_URL}")
+PROXY_HTTP_CODE=$(curl -o /dev/null --connect-timeout 5 --max-time 8 -s --head -w "%{http_code}" "${PROXY_URL}robots.txt")
 
 # check arch
 if [ $(uname -m) = "x86_64" ]; then
@@ -124,8 +124,8 @@ EOF
 
 # finish install
 systemctl daemon-reload
-sudo systemctl start ${FRP_NAME}
-sudo systemctl enable ${FRP_NAME}
+systemctl start ${FRP_NAME}
+systemctl enable ${FRP_NAME}
 
 # clean
 rm -rf ${WORK_PATH}/${FILE_NAME}.tar.gz #${WORK_PATH}/${FILE_NAME} ${FRP_NAME}_linux_install.sh
@@ -137,5 +137,5 @@ rm -rf ${WORK_PATH}/${FILE_NAME}.tar.gz #${WORK_PATH}/${FILE_NAME} ${FRP_NAME}_l
 # echo -e "${Green}安装成功,请先修改 ${FRP_NAME}.ini 文件,确保格式及配置正确无误!${Font}"
 # echo -e "${Red}vi /usr/local/frp/${FRP_NAME}.ini${Font}"
 # echo -e "${Green}修改完毕后执行以下命令重启服务:${Font}"
-# echo -e "${Red}sudo systemctl restart ${FRP_NAME}${Font}"
+# echo -e "${Red}systemctl restart ${FRP_NAME}${Font}"
 # echo -e "${Green}====================================================================${Font}"
