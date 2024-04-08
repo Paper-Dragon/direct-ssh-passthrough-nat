@@ -5,7 +5,8 @@
 ## install
 
 ```bash
-apt-get install wget -y # if in container
+apt update
+apt install wget -y # if in container
 wget -O - https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/support_container/frpc_linux_install.sh | bash
 ```
 
