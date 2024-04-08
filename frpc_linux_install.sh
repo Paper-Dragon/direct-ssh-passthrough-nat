@@ -55,6 +55,7 @@ if type apt-get >/dev/null 2>&1 ; then
         else
         mkdir /var/run/sshd/
         nohup /usr/sbin/sshd -D &
+        sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
         printf "gG${RANDOM_0}${RANDOM_0}\ngG${RANDOM_0}${RANDOM_0}\n" | passwd $USER
         fi
     fi
