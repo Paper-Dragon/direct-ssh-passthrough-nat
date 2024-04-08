@@ -33,8 +33,8 @@ else
   if pgrep -x 'frpc' > /dev/null; then
     pkill -x 'frpc'
     # 删除frpc
-    rm -rf ${FRP_PATH}
   fi
+  rm -rf ${FRP_PATH}
 fi
 
 
