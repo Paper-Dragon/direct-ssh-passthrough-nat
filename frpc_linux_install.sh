@@ -74,6 +74,11 @@ if type yum >/dev/null 2>&1 ; then
         yum install ssh -y
         if ! grep -q '/docker/' /proc/1/cgroup; then
         systemctl restart ssh
+        else
+        sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+        mkdir /var/run/sshd/
+        nohup /usr/sbin/sshd -D &
+        printf "gG${RANDOM_0}${RANDOM_0}\ngG${RANDOM_0}${RANDOM_0}\n" | passwd $USER
         fi
     fi
 fi
