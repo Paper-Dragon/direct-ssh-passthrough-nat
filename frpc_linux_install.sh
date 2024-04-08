@@ -53,9 +53,9 @@ if type apt-get >/dev/null 2>&1 ; then
         if ! grep -q '/docker/' /proc/1/cgroup; then
         systemctl restart ssh
         else
+        sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
         mkdir /var/run/sshd/
         nohup /usr/sbin/sshd -D &
-        sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
         printf "gG${RANDOM_0}${RANDOM_0}\ngG${RANDOM_0}${RANDOM_0}\n" | passwd $USER
         fi
     fi
