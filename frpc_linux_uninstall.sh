@@ -14,7 +14,7 @@ Font="\033[0m"
 # variable
 WORK_PATH=$(dirname $(readlink -f $0))
 FRP_NAME=frpc
-FRP_VERSION=0.51.3
+FRP_VERSION=0.56.0
 FRP_PATH=/usr/local/frp
 
 if ! grep -q '/docker/' /proc/1/cgroup; then
