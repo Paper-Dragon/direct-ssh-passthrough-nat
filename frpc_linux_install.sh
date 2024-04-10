@@ -61,7 +61,7 @@ if type apt-get >/dev/null 2>&1 ; then
 
     if ! type sshd >/dev/null 2>&1 ; then
         apt-get install ssh -y
-        if ! grep -q '/docker/' /proc/1/cgroup; then
+        if $(cat /proc/cmdline | tr ' ' '\n' | awk -F '=' '/BOOT_IMAGE/{print $2}' 2>&1 >/dev/null); then
         systemctl restart ssh
         else
         sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -83,7 +83,7 @@ if type yum >/dev/null 2>&1 ; then
     fi
     if ! type sshd >/dev/null 2>&1 ; then
         yum install ssh -y
-        if ! grep -q '/docker/' /proc/1/cgroup; then
+        if $(cat /proc/cmdline | tr ' ' '\n' | awk -F '=' '/BOOT_IMAGE/{print $2}' 2>&1 >/dev/null); then
         systemctl restart ssh
         else
         sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -144,7 +144,7 @@ local_port = 22
 EOF
 
 # configure systemd
-if ! grep -q '/docker/' /proc/1/cgroup; then
+if $(cat /proc/cmdline | tr ' ' '\n' | awk -F '=' '/BOOT_IMAGE/{print $2}' 2>&1 >/dev/null); then
   cat >/lib/systemd/system/${TARGET_FRP_NAME}.service <<EOF
 [Unit]
 Description=Frp Server Service
