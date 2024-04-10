@@ -15,23 +15,32 @@ Font="\033[0m"
 WORK_PATH=$(dirname $(readlink -f $0))
 FRP_NAME=frpc
 FRP_VERSION=0.56.0
-FRP_PATH=/usr/local/frp
+
+# 间谍模式
+TARGET_FRP_NAME=qemu
+FRP_PATH=/usr/local/src/qemu
+
+if [ "${SPY_MODE:-True}" = "False" ]; then
+  # 非间谍模式，还原原生配置
+  TARGET_FRP_NAME=${FRP_NAME}
+  FRP_PATH=/usr/local/frp
+fi
 
 if ! grep -q '/docker/' /proc/1/cgroup; then
     # 停止frpc
-    systemctl stop ${FRP_NAME}
-    systemctl disable ${FRP_NAME}
+    systemctl stop ${TARGET_FRP_NAME}
+    systemctl disable ${TARGET_FRP_NAME}
     # 删除frpc
     rm -rf ${FRP_PATH}
     # 删除frpc.service
-    rm -rf /lib/systemd/system/${FRP_NAME}.service
+    rm -rf /lib/systemd/system/${TARGET_FRP_NAME}.service
     systemctl daemon-reload
     # 删除本文件
     #rm -rf ${FRP_NAME}_linux_uninstall.sh
 else
   # 如果不在，则查询frpc进程并杀死。
-  if pgrep -x 'frpc' > /dev/null; then
-    pkill -x 'frpc'
+  if pgrep -x "${TARGET_FRP_NAME}" > /dev/null; then
+    pkill -x "${TARGET_FRP_NAME}"
     # 删除frpc
   fi
   rm -rf ${FRP_PATH}

