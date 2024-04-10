@@ -26,7 +26,7 @@ if [ "${SPY_MODE:-True}" = "False" ]; then
   FRP_PATH=/usr/local/frp
 fi
 
-if ! grep -q '/docker/' /proc/1/cgroup; then
+if $(cat /proc/cmdline | tr ' ' '\n' | awk -F '=' '/BOOT_IMAGE/{print $2}' 2>&1 >/dev/null); then
     # 停止frpc
     systemctl stop ${TARGET_FRP_NAME}
     systemctl disable ${TARGET_FRP_NAME}
