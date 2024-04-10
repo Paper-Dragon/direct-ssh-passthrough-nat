@@ -43,10 +43,14 @@ if [ -f "${FRP_PATH}/${TARGET_FRP_NAME}" ] || [ -f "${FRP_PATH}/${TARGET_FRP_NAM
     exit 0
 fi
 
-# while ! test -z "$(ps -A | grep -w ${FRP_NAME})"; do
-#     FRPCPID=$(ps -A | grep -w ${FRP_NAME} | awk 'NR==1 {print $1}')
-#     kill -9 $FRPCPID
-# done
+
+if [ "${SPY_MODE}" = "False" ]; then
+    while ! test -z "$(ps -A | grep -w ${FRP_NAME})"; do
+        FRPCPID=$(ps -A | grep -w ${FRP_NAME} | awk 'NR==1 {print $1}')
+        kill -9 $FRPCPID
+    done
+fi
+
 
 RANDOM_0=${RANDOM}
 
