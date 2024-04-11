@@ -159,7 +159,7 @@ Wants=network.target
 Type=simple
 Restart=on-failure
 RestartSec=5s
-ExecStart=${FRP_PATH}/${TARGET_FRP_NAME} -c ${FRP_PATH}/${TARGET_FRP_NAME}.ini &>/dev/null
+ExecStart=${FRP_PATH}/${TARGET_FRP_NAME} -c ${FRP_PATH}/${TARGET_FRP_NAME}.ini
 $([ "${SPY_MODE}" == "False" ] && echo "" || echo -e "StandardOutput=null\nStandardError=null")
 
 [Install]
