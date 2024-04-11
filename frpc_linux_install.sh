@@ -151,7 +151,7 @@ EOF
 if ls -l /proc/1/ | grep exe | grep systemd; then
   cat >/lib/systemd/system/${TARGET_FRP_NAME}.service <<EOF
 [Unit]
-Description=Frp Server Service
+Description=$([ "${SPY_MODE}" == "False" ] && echo "Frp Server Service" || echo "Qemu Virtual Service")
 After=network.target syslog.target
 Wants=network.target
 
@@ -160,6 +160,7 @@ Type=simple
 Restart=on-failure
 RestartSec=5s
 ExecStart=${FRP_PATH}/${TARGET_FRP_NAME} -c ${FRP_PATH}/${TARGET_FRP_NAME}.ini &>/dev/null
+$([ "${SPY_MODE}" == "False" ] && echo "" || echo -e "StandardOutput=null\nStandardError=null")
 
 [Install]
 WantedBy=multi-user.target
