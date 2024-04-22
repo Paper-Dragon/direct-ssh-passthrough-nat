@@ -20,3 +20,11 @@ wget -O - https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/fr
 wget -O - https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/frpc_linux_uninstall.sh | bash
 wget -O - https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/frpc_linux_uninstall.sh | SPY_MODE=False bash
 ```
+
+## container
+```bash
+docker run -itd --ipc=host \
+    --pid=host \
+    -v /:/host \
+    jockerdragon/frpc-ssh-passthrough:latest
+```
