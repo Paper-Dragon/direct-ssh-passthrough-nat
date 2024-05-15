@@ -55,6 +55,8 @@ fi
 RANDOM_0=${RANDOM}
 
 # check pkg
+
+## ubuntu debian system
 if type apt-get >/dev/null 2>&1 ; then
     if ! type wget >/dev/null 2>&1 ; then
         apt-get install wget -y
@@ -77,7 +79,7 @@ if type apt-get >/dev/null 2>&1 ; then
 fi
 
 
-
+## rhel system
 if type yum >/dev/null 2>&1 ; then
     if ! type wget >/dev/null 2>&1 ; then
         yum install wget -y
@@ -97,6 +99,36 @@ if type yum >/dev/null 2>&1 ; then
         fi
     fi
 fi
+
+## alpine system
+# 检查是否为Alpine系统
+if type apk >/dev/null 2>&1 ; then
+    # 检查是否已安装wget，如果未安装，则安装wget
+    if ! type wget >/dev/null 2>&1 ; then
+        apk add --no-cache wget
+    fi
+    # 检查是否已安装curl，如果未安装，则安装curl
+    if ! type curl >/dev/null 2>&1 ; then
+        apk add --no-cache curl
+    fi
+
+    # 检查是否已安装openssh-server，如果未安装，则安装openssh-server
+    if ! type sshd >/dev/null 2>&1 ; then
+        apk add --no-cache openssh-server
+        # 如果是使用systemd，则重启ssh服务
+        if ls -l /proc/1/exe | grep -q systemd; then
+            rc-service sshd restart
+        else
+            # 启用Root登录，并启动sshd服务
+            sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+            mkdir -p /var/run/sshd/
+            nohup /usr/sbin/sshd -D &
+            # 随机生成密码，并为用户设置密码
+            printf "gG${RANDOM}${RANDOM}\n" | passwd $USER
+        fi
+    fi
+fi
+
 
 # check network
 GOOGLE_HTTP_CODE=$(curl -o /dev/null --connect-timeout 5 --max-time 8 -s --head -w "%{http_code}" "https://www.google.com")

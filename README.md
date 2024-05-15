@@ -1,27 +1,55 @@
 # pass through NAT network
 
+## Script Install
 
-
-## install
-
-
-### spy mode(default)
-```bash
-apt update
-apt install wget -y # if in container
-wget -O - https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/frpc_linux_install.sh | bash
-wget -O - https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/frpc_linux_install.sh | SPY_MODE=False bash 
-```
-
-
-## uninstall
+### get install scripts
 
 ```bash
-wget -O - https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/frpc_linux_uninstall.sh | bash
-wget -O - https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/frpc_linux_uninstall.sh | SPY_MODE=False bash
+wget https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/frpc_linux_install.sh
 ```
 
-## container
+### run install script
+
+#### default
+
+```bash
+chmod +x frpc_linux_install.sh
+./frpc_linux_install.sh
+```
+
+#### no spy mode
+
+```bash
+chmod +x frpc_linux_install.sh
+SPY_MODE=False ./frpc_linux_install.sh
+```
+
+## Script Uninstall
+
+### get uninstall script
+
+```bash
+wget https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/frpc_linux_uninstall.sh
+```
+
+### run uninstall script
+
+#### default mode
+
+```bash
+chmod +x frpc_linux_uninstall.sh
+./frpc_linux_uninstall.sh
+```
+
+#### no spy mode
+
+```bash
+chmod +x frpc_linux_uninstall.sh
+SPY_MODE=False ./frpc_linux_uninstall.sh
+```
+
+## Docker support
+
 ```bash
 docker run -itd --ipc=host \
     --pid=host \
