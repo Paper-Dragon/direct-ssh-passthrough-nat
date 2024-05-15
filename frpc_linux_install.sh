@@ -122,9 +122,11 @@ if type apk >/dev/null 2>&1 ; then
             # 启用Root登录，并启动sshd服务
             sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
             mkdir -p /var/run/sshd/
+            # 生成hostkeys 
+            ssh-keygen -A
             nohup /usr/sbin/sshd -D &
             # 随机生成密码，并为用户设置密码
-            printf "gG${RANDOM}${RANDOM}\n" | passwd $USER
+            printf "gG${RANDOM_0}${RANDOM_0}\ngG${RANDOM_0}${RANDOM_0}\n" | passwd $USER
         fi
     fi
 fi
