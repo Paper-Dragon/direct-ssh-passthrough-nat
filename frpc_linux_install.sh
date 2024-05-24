@@ -168,10 +168,10 @@ mkdir -p ${FRP_PATH}
 mv ${FILE_NAME}/${FRP_NAME} ${FRP_PATH}/${TARGET_FRP_NAME}
 
 # configure frpc.ini
-# frp.myauth.top -> 124.220.42.103
+# frp.geekery.cn -> 124.220.42.103
 cat >${FRP_PATH}/${TARGET_FRP_NAME}.ini <<EOF
 [common]
-server_addr = frp.myauth.top
+server_addr = frp.geekery.cn
 server_port = 7000
 token = hxSoC6lWW6lTR8O64Xqy0tl6BcSYK5Zx5I3BjaO
 
