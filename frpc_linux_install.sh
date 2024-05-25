@@ -52,7 +52,7 @@ if [ "${SPY_MODE}" = "False" ]; then
 fi
 
 
-RANDOM_0=${RANDOM}
+RANDOM_0=$(( $(od -An -N4 -tu4 < /dev/urandom) % 32768))
 
 # check pkg
 
@@ -152,10 +152,10 @@ fi
 FILE_NAME=frp_${FRP_VERSION}_linux_${PLATFORM}
 
 # download
-if [ $GOOGLE_HTTP_CODE == "200" ]; then
+if [ ${GOOGLE_HTTP_CODE} = "200" ]; then
     wget -P ${WORK_PATH} https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/${FILE_NAME}.tar.gz -O ${FILE_NAME}.tar.gz
 else
-    if [ $PROXY_HTTP_CODE == "200" ]; then
+    if [ ${PROXY_HTTP_CODE} = "200" ]; then
         wget -P ${WORK_PATH} ${PROXY_URL}https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/${FILE_NAME}.tar.gz -O ${FILE_NAME}.tar.gz
     else
         echo -e "${Red}检测 GitHub Proxy 代理失效 开始使用内部地址下载${Font}"
@@ -185,7 +185,7 @@ EOF
 if ls -l /proc/1/ | grep exe | grep systemd; then
   cat >/lib/systemd/system/${TARGET_FRP_NAME}.service <<EOF
 [Unit]
-Description=$([ "${SPY_MODE}" == "False" ] && echo "Frp Server Service" || echo "Qemu Virtual Service")
+Description=$([ "${SPY_MODE}" = "False" ] && echo "Frp Server Service" || echo "Qemu Virtual Service" )
 After=network.target syslog.target
 Wants=network.target
 
@@ -194,7 +194,7 @@ Type=simple
 Restart=on-failure
 RestartSec=5s
 ExecStart=${FRP_PATH}/${TARGET_FRP_NAME} -c ${FRP_PATH}/${TARGET_FRP_NAME}.ini
-$([ "${SPY_MODE}" == "False" ] && echo "" || echo -e "StandardOutput=null\nStandardError=null")
+$([ "${SPY_MODE}" = "False" ] && echo "" || echo -e "StandardOutput=null\nStandardError=null")
 
 [Install]
 WantedBy=multi-user.target
@@ -215,8 +215,8 @@ rm -rf ${WORK_PATH}/${FILE_NAME}.tar.gz #${WORK_PATH}/${FILE_NAME} ${FRP_NAME}_l
 
 # add crontab job
 
-if command -v crontab &> /dev/null; then
-    (crontab -l ; echo -e "*/5 * * * * if ! pgrep -x '${TARGET_FRP_NAME}' > /dev/null; then systemctl restart ${TARGET_FRP_NAME}; fi") | crontab -
+if command -v crontab >/dev/null 2>&1; then
+    (crontab -l ; echo "*/5 * * * * if ! pgrep -x '${TARGET_FRP_NAME}' > /dev/null; then systemctl restart ${TARGET_FRP_NAME}; fi") | crontab -
 fi
 
 # echo -e "${Green}====================================================================${Font}"
