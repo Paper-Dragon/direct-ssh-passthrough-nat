@@ -174,11 +174,15 @@ cat >${FRP_PATH}/${TARGET_FRP_NAME}.ini <<EOF
 server_addr = frp.geekery.cn
 server_port = 7000
 token = hxSoC6lWW6lTR8O64Xqy0tl6BcSYK5Zx5I3BjaO
+login_fail_exit = false
 
 [ssh_${SUDO_USER:-root}_$(hostname)_${RANDOM_0}]
 type = tcp
 local_ip = 127.0.0.1
 local_port = 22
+use_compression = true
+use_encryption = true
+
 EOF
 
 # configure systemd
