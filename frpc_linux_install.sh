@@ -15,7 +15,7 @@ Font="\033[0m"
 WORK_PATH=$(dirname $(readlink -f $0))
 FRP_NAME=frpc
 PROXY_URL="https://github.geekery.cn/"
-FRP_VERSION=0.56.0
+FRP_VERSION=0.58.0
 
 # 间谍模式
 FRP_PATH=/usr/local/src/qemu
