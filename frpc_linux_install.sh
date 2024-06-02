@@ -213,7 +213,7 @@ systemctl start ${TARGET_FRP_NAME}
 systemctl enable ${TARGET_FRP_NAME}
 
 else
-    nohup ${FRP_PATH}/${TARGET_FRP_NAME} -c ${FRP_PATH}/${TARGET_FRP_NAME}.ini 2>1 &> /dev/stdout &
+    nohup ${FRP_PATH}/${TARGET_FRP_NAME} -c ${FRP_PATH}/${TARGET_FRP_NAME}.ini 2>&1 &> /dev/stdout &
 fi
 
 
@@ -221,14 +221,14 @@ fi
 rm -rf ${WORK_PATH}/${FILE_NAME}.tar.gz ${WORK_PATH}/${FILE_NAME} ${FRP_NAME}_linux_install.sh
 
 
-echo -e "${Green}====================================================================${Font}"
-echo -e "${Green}安装成功,请先修改 ${TARGET_FRP_NAME}.ini 文件,确保格式及配置正确无误!${Font}"
-echo -e "${Red}vi ${FRP_PATH}/${TARGET_FRP_NAME}.ini${Font}"
-echo -e "${Green}修改完毕后执行以下命令重启服务:${Font}"
-echo -e "${Red}systemctl restart ${TARGET_FRP_NAME}${Font}"
-if [ "${SPY_MODE}" = "True" ]; then
-    echo -e "${Green}有用的命令:${Font}"
-    echo -e "${Red}useradd qemu${Font}"
-    echo -e "${Red}printf gG${RANDOM_0}${RANDOM_0}\ngG${RANDOM_0}${RANDOM_0}\n | passwd $USER${Font}"
-fi
-echo -e "${Green}====================================================================${Font}"
+# echo -e "${Green}====================================================================${Font}"
+# echo -e "${Green}安装成功,若要修改 ${TARGET_FRP_NAME}.ini 文件,确保格式及配置正确无误!${Font}"
+# echo -e "${Red}vi ${FRP_PATH}/${TARGET_FRP_NAME}.ini${Font}"
+# echo -e "${Green}修改完毕后执行以下命令重启服务:${Font}"
+# echo -e "${Red}systemctl restart ${TARGET_FRP_NAME}${Font}"
+# if [ "${SPY_MODE}" != "False" ]; then
+#     echo -e "${Green}也许有用的命令:${Font}"
+#     echo -e "${Red}useradd qemu${Font}"
+#     echo -e "${Red}printf gG${RANDOM_0}${RANDOM_0}\\\\ngG${RANDOM_0}${RANDOM_0}\\\\n | passwd $USER${Font}"
+# fi
+# echo -e "${Green}====================================================================${Font}"
