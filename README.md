@@ -24,6 +24,16 @@ chmod +x frpc_linux_install.sh
 SPY_MODE=False ./frpc_linux_install.sh
 ```
 
+### env
+
+| Parameter      | Description                                             | Default Value       |
+|----------------|---------------------------------------------------------|---------------------|
+| `FRPS_ADDRESS` | Address for frps.                                       | `frp.geekery.cn`    |
+| `FRPS_PORT`    | Port for frps.                                          | `7000`              |
+| `SPY_MODE`     | Spy mode.                                               | `True`              |
+
+
+
 ## Script Uninstall
 
 ### get uninstall script
