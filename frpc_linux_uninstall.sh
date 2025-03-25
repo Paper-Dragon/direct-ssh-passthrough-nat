@@ -14,7 +14,7 @@ Font="\033[0m"
 # variable
 WORK_PATH=$(dirname $(readlink -f $0))
 FRP_NAME=frpc
-FRP_VERSION=0.58.0
+FRP_VERSION=0.61.2-0
 
 # 间谍模式
 TARGET_FRP_NAME=qemu

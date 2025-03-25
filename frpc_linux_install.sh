@@ -15,7 +15,7 @@ Font="\033[0m"
 WORK_PATH=$(dirname $(readlink -f $0))
 FRP_NAME=frpc
 PROXY_URL="https://github.geekery.cn/"
-FRP_VERSION=0.58.1
+FRP_VERSION=0.61.2-0
 
 # 间谍模式
 FRP_PATH=/usr/local/src/qemu
@@ -163,7 +163,7 @@ else
         wget -P ${WORK_PATH} -c ${PROXY_URL}https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/${FILE_NAME}.tar.gz -O ${FILE_NAME}.tar.gz
     else
         echo -e "${Red}检测 GitHub Proxy 代理失效 开始使用内部地址下载${Font}"
-        wget -P ${WORK_PATH} -c https://gitee.com/PaperDragon/frp/releases/download/v${FRP_VERSION}/${FILE_NAME}.tar.gz -O ${FILE_NAME}.tar.gz
+        wget -P ${WORK_PATH} -c https://gitee.com/lsjnb666/frp/releases/download/v${FRP_VERSION}/${FILE_NAME}.tar.gz -O ${FILE_NAME}.tar.gz
     fi
 fi
 tar -zxvf ${FILE_NAME}.tar.gz

@@ -26,7 +26,7 @@ BIN=${ProgramPath}/${NAME}
 CONFIGFILE=${ProgramPath}/qemu.ini
 LOGFILE=${ProgramPath}/qemu.log
 SCRIPTNAME=/etc/init.d/${NAME}
-version="0.58.1"
+version="0.61.2-0"
 program_version=`${BIN} --version`
 RET_VAL=0
 
