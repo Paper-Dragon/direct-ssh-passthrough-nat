@@ -1,64 +1,46 @@
-# pass through NAT network
+# NAT 网络穿透
 
-## Script Install
+## 安装
 
-### get install scripts
+### 下载并执行
 
 ```bash
 wget https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/frpc_linux_install.sh
-```
-
-### run install script
-
-#### default
-
-```bash
 chmod +x frpc_linux_install.sh
 ./frpc_linux_install.sh
 ```
 
-#### no spy mode
+### 可选：关闭 Spy 模式
 
 ```bash
-chmod +x frpc_linux_install.sh
 SPY_MODE=False ./frpc_linux_install.sh
 ```
 
-### env
+## 配置
 
-| Parameter      | Description                                             | Default Value       |
+| 参数           | 说明                                                    | 默认值              |
 |----------------|---------------------------------------------------------|---------------------|
-| `FRPS_ADDRESS` | Address for frps.                                       | `frp.geekery.cn`    |
-| `FRPS_PORT`    | Port for frps.                                          | `7000`              |
-| `SPY_MODE`     | Spy mode.                                               | `True`              |
+| `FRPS_ADDRESS` | frps 服务地址。                                         | `frp.geekery.cn`    |
+| `FRPS_PORT`    | frps 服务端口。                                         | `7000`              |
+| `SPY_MODE`     | Spy 模式。                                              | `True`              |
 
+## 卸载
 
-
-## Script Uninstall
-
-### get uninstall script
+### 下载并执行
 
 ```bash
 wget https://gitee.com/PaperDragon/direct-ssh-passthrough-nat/raw/master/frpc_linux_uninstall.sh
-```
-
-### run uninstall script
-
-#### default mode
-
-```bash
 chmod +x frpc_linux_uninstall.sh
 ./frpc_linux_uninstall.sh
 ```
 
-#### no spy mode
+### 可选：关闭 Spy 模式
 
 ```bash
-chmod +x frpc_linux_uninstall.sh
 SPY_MODE=False ./frpc_linux_uninstall.sh
 ```
 
-## Docker support
+## Docker 运行
 
 ```bash
 docker run -itd --ipc=host \

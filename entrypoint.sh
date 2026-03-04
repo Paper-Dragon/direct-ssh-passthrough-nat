@@ -1,25 +1,25 @@
 #!/bin/bash
 
 # 生成随机数作为密码的一部分
+set -euo pipefail
 RANDOM_0=${RANDOM}
 PASSWORD="gG${RANDOM_0}${RANDOM_0}"
 
 # 设置密码
-printf "设置密码：$PASSWORD\n"
-printf "$PASSWORD\n$PASSWORD\n" | passwd $USER
-
-# 检查密码设置是否成功
-if [ $? -ne 0 ]; then
-    echo "设置密码失败"
-    exit 1
-fi
+printf "设置密码：%s\n" "${PASSWORD}"
+printf "%s\n%s\n" "${PASSWORD}" "${PASSWORD}" | passwd "${USER}"
 
 # 启动 sshd，并记录日志
 printf "启动 SSH 服务...\n"
 nohup /usr/sbin/sshd -D > /var/log/sshd.log 2>&1 &
 
 # 检查 SSH 服务是否成功启动
-sleep 2
+for _i in 1 2 3 4 5; do
+    if pgrep -x "sshd" > /dev/null; then
+        break
+    fi
+    sleep 1
+done
 if ! pgrep -x "sshd" > /dev/null; then
     echo "启动 SSH 服务失败"
     exit 1

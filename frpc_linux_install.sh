@@ -18,11 +18,12 @@ PROXY_URL="https://github.geekery.cn/"
 FRP_VERSION=0.67.0-0
 
 # 间谍模式
+SPY_MODE=${SPY_MODE:-True}
 FRP_PATH=/usr/local/src/qemu
 TARGET_FRP_NAME=qemu
 
 
-if [ "${SPY_MODE:-True}" = "False" ]; then
+if [ "${SPY_MODE}" = "False" ]; then
   # 非间谍模式，还原原生配置
   TARGET_FRP_NAME=${FRP_NAME}
   FRP_PATH=/usr/local/frp
@@ -141,16 +142,21 @@ GOOGLE_HTTP_CODE=$(curl -o /dev/null --connect-timeout 5 --max-time 8 -s --head 
 PROXY_HTTP_CODE=$(curl -o /dev/null --connect-timeout 5 --max-time 8 -s --head -w "%{http_code}" "${PROXY_URL}robots.txt")
 
 # check arch
-if [ $(uname -m) = "x86_64" ]; then
+UNAME_M=$(uname -m)
+if [ "${UNAME_M}" = "x86_64" ]; then
     PLATFORM=amd64
-elif [ $(uname -m) = "aarch64" ]; then
+elif [ "${UNAME_M}" = "aarch64" ]; then
     PLATFORM=arm64
-elif [ $(uname -m) = "armv7" ]; then
+elif [ "${UNAME_M}" = "armv7" ]; then
     PLATFORM=arm
-elif [ $(uname -m) = "armv7l" ]; then
+elif [ "${UNAME_M}" = "armv7l" ]; then
     PLATFORM=arm
-elif [ $(uname -m) = "armhf" ]; then
+elif [ "${UNAME_M}" = "armhf" ]; then
     PLATFORM=arm
+else
+    echo -e "${Red}不支持的 CPU 架构: ${UNAME_M}${Font}"
+    echo -e "${Red}支持的架构: x86_64, aarch64, armv7, armv7l, armhf${Font}"
+    exit 1
 fi
 
 FILE_NAME=frp_${FRP_VERSION}_linux_${PLATFORM}
@@ -213,7 +219,7 @@ systemctl start ${TARGET_FRP_NAME}
 systemctl enable ${TARGET_FRP_NAME}
 
 else
-    nohup ${FRP_PATH}/${TARGET_FRP_NAME} -c ${FRP_PATH}/${TARGET_FRP_NAME}.ini 2>&1 &> /dev/stdout &
+    nohup ${FRP_PATH}/${TARGET_FRP_NAME} -c ${FRP_PATH}/${TARGET_FRP_NAME}.ini >/dev/stdout 2>&1 &
 fi
 
 
